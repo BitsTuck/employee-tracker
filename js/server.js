@@ -29,7 +29,7 @@ inquirer
     .then((response) => {
         console.log(response)
         let query;
-        switch (response.body) {
+        switch (response.choice) {
             case 'View all departments':
                 db.query(`SELECT department_name FROM employees`);
                 break;
