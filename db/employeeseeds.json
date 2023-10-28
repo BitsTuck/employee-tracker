@@ -1,0 +1,66 @@
+[
+    {
+        "first_name": "Angela",
+        "last_name": "Martin",
+        "title": "Head of Accounting",
+        "salary": 90000,
+        "department_name": "Accounting",
+        "manager": "N/A"
+    },
+    {
+        "first_name": "Oscar",
+        "last_name": "Martinez",
+        "title": "Accountant",
+        "salary": 85000,
+        "department_name": "Accounting",
+        "manager": "Angela Martin"
+    },
+    {
+        "first_name": "Kevin",
+        "last_name": "Malone",
+        "title": "Accountant",
+        "salary": 85000,
+        "department_name": "Accounting",
+        "manager": "Angela Martin"
+    },
+    {
+        "first_name": "Dwight",
+        "last_name": "Schrute",
+        "title": "Head of Sales",
+        "salary": 75000,
+        "department_name": "Sales",
+        "manager": "N/A"
+    },
+    {
+        "first_name": "Stanley",
+        "last_name": "Hudson",
+        "title": "Senior Salesperson",
+        "salary": 72000,
+        "department_name": "Sales",
+        "manager": "Dwight Schrute"
+    },
+    {
+        "first_name": "Jim",
+        "last_name": "Halpert",
+        "title": "Salesperson",
+        "salary": 70000,
+        "department_name": "Sales",
+        "manager": "Dwight Schrute"
+    },
+    {
+        "first_name": "Darryl",
+        "last_name": "Philbin",
+        "title": "Foreperson",
+        "salary": 75000,
+        "department_name": "Shipping",
+        "manager": "N/A"
+    },
+    {
+        "first_name": "Roy",
+        "last_name": "Anderson",
+        "title": "Shipping Technician",
+        "salary": 70000,
+        "department_name": "Accounting",
+        "manager": "N/A"
+    }
+]
