@@ -1,8 +1,5 @@
-const express = require('express');
 const inquirer = require('inquirer');
 const mysql = require('mysql')
-
-const app = express()
 
 
 const db = mysql.createConnection(
@@ -22,6 +19,7 @@ const getStarted = [{
     type: 'list',
     message: 'Please make a selection',
     choices: ['View all departments', 'View all roles', 'View all employees', 'Add a Department', 'Add a role', 'Add an employee', 'Update an employee role'],
+    name: 'choice',
 }]
 
 const addDept = [{
@@ -81,52 +79,83 @@ const updateRole = [{
 
 
 
-inquirer
-    .prompt(getStarted)
-    .then((response) => {
-        console.log(response)
-        let query;
-        switch (response.choice) {
-            case 'View all departments':
-                db.query('SELECT * FROM department', function (err, results) {
-                    console.log(results);
-                });
-                break;
-            case 'View all roles':
-                db.query('SELECT * FROM role', function (err, results) {
-                    console.log(results);
-                });
-                break;
-            case 'View all employees':
-                db.query('SELECT * FROM employee', function (err, results) {
-                    console.log(results);
-                });
-                break;
-            case 'Add a Department':
-                inquirer
-                .prompt(addDept)
-                .then((response) => {
-                db.query(`INSERT ${addDept.name}`);});
-                break;
-            case 'Add a role':
-                inquirer
-                .prompt(addRole)
-                .then((response) => {
-                db.query(`INSERT ${addRole.name} ${addRole.dept} ${addRole.salary}`)});
-                break;
-            case 'Add an employee':
-                inquirer
-                .prompt(addEmployee)
-                .then((response) =>{
-                db.query(`INSERT ${addEmployee.first_name} ${addEmployee.last_name} ${addEmployee.role}${addEmployee.manager}`)});
-                break;
-            case 'Update an employee role':
-                inquirer
-                .prompt(updateRole)
-                .then((response) => {
-                db.query(`INSERT ${updateEmployee.new_update} WHERE title = ?`)});
-                break;
-            default:
-                break;
-        }
-    })
+let menu = () => {
+    inquirer
+        .prompt(getStarted)
+        .then((response) => {
+            console.log(response)
+            let query;
+            switch (response.choice) {
+                case 'View all departments':
+                    db.query('SELECT * FROM department', function (err, results) {
+                        console.table(results);
+                        menu()
+                    });
+                    break;
+                case 'View all roles':
+                    db.query('SELECT * FROM role', function (err, results) {
+                        console.table(results);
+                        menu()
+                    });
+                    break;
+                case 'View all employees':
+                    db.query('SELECT * FROM employee', function (err, results) {
+                        console.table(results);
+                        menu()
+                    });
+                    break;
+                case 'Add a Department':
+                    inquirer
+                        .prompt(addDept)
+                        .then((response) => {
+
+                            db.query(`INSERT INTO department (dept_name) VALUES (?);`, response.name, (err, result) => {
+                                if (err) {
+                                    throw err
+                                } else {
+                                    console.log("\n Department created \n")
+                                }
+                                menu()
+                            });
+
+                        });
+                    break;
+                case 'Add a role':
+                    // db.query('SELECT * FROM department', function (err, results) {
+                    //     console.table(results)
+
+                        inquirer
+                            .prompt(addRole)
+                            .then((response) => {
+                                db.query(`INSERT INTO role (title, salary, dept_id);`, response.name, response.dept, response.salary, (err, result) => {
+                                    if (err) {
+                                        throw err
+                                    } else {
+                                        console.log("\n New role created \n")
+                                    }
+                                    menu()
+                                })
+                            });
+                    // });
+                    break;
+                case 'Add an employee':
+                    inquirer
+                        .prompt(addEmployee)
+                        .then((response) => {
+                            db.query(`INSERT ${addEmployee.first_name} ${addEmployee.last_name} ${addEmployee.role}${addEmployee.manager}`)
+                        });
+                    break;
+                case 'Update an employee role':
+                    inquirer
+                        .prompt(updateRole)
+                        .then((response) => {
+                            db.query(`INSERT ${updateEmployee.new_update} WHERE title = ?`)
+                        });
+                    break;
+                default:
+                    break;
+            }
+        })
+}
+
+menu()
