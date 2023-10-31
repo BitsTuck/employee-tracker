@@ -25,13 +25,18 @@ const getStarted = [{
 const addDept = [{
     type: 'input',
     message: 'What is the name of the department?',
-    name: 'name',
+    name: 'dept_name',
+},
+{
+    type: 'input',
+    message: 'Who is the manager?',
+    name: "dept_mgr"
 }]
 
 const addRole = [{
     type: 'input',
     message: 'What is the name of the role?',
-    name: 'name',
+    name: 'title',
 },
 {
     type: 'input',
@@ -99,7 +104,7 @@ let menu = () => {
                     });
                     break;
                 case 'View all employees':
-                    db.query('SELECT * FROM employee', function (err, results) {
+                    db.query('SELECT emp_id, first_name, last_name, title, dept_name, salary, manager_name FROM employee INNER JOIN role ON employee.role_id=role.id;', function (err, results) {
                         console.table(results);
                         menu()
                     });
@@ -108,8 +113,8 @@ let menu = () => {
                     inquirer
                         .prompt(addDept)
                         .then((response) => {
-
-                            db.query(`INSERT INTO department (dept_name) VALUES (?);`, response.name, (err, result) => {
+                            const params = [response.dept_name, response.dept_mgr]
+                            db.query(`INSERT INTO department (dept_name, manager) VALUES (?, ?);`, params, (err, result) => {
                                 if (err) {
                                     throw err
                                 } else {
@@ -117,39 +122,51 @@ let menu = () => {
                                 }
                                 menu()
                             });
-
                         });
                     break;
                 case 'Add a role':
-                    // db.query('SELECT * FROM department', function (err, results) {
-                    //     console.table(results)
-
-                        inquirer
-                            .prompt(addRole)
-                            .then((response) => {
-                                db.query(`INSERT INTO role (title, salary, dept_id);`, response.name, response.dept, response.salary, (err, result) => {
-                                    if (err) {
-                                        throw err
-                                    } else {
-                                        console.log("\n New role created \n")
-                                    }
-                                    menu()
-                                })
-                            });
-                    // });
+                    inquirer
+                        .prompt(addRole)
+                        .then((response) => {
+                            const params = [response.title, response.dept, response.salary]
+                            db.query(`INSERT INTO role (title, dept_name, salary) VALUES(?, ?, ?);`, params, (err, result) => {
+                                if (err) {
+                                    throw err
+                                } else {
+                                    console.log("\n New role created \n")
+                                }
+                                menu()
+                            })
+                        });
                     break;
                 case 'Add an employee':
                     inquirer
                         .prompt(addEmployee)
                         .then((response) => {
-                            db.query(`INSERT ${addEmployee.first_name} ${addEmployee.last_name} ${addEmployee.role}${addEmployee.manager}`)
+                            const params = [response.first_name, response.last_name, response.role, response.manager]
+                            db.query(`INSERT INTO employee (first_name, last_name, role_id, manager_name) VALUES (?, ?, ?, ?);`, params, (err, result) => {
+                                if (err) {
+                                    throw err
+                                } else {
+                                    console.log("\n New employee created \n")
+                                }
+                                menu()
+                            })
                         });
                     break;
                 case 'Update an employee role':
                     inquirer
                         .prompt(updateRole)
                         .then((response) => {
-                            db.query(`INSERT ${updateEmployee.new_update} WHERE title = ?`)
+                            const params = [response.first_name, response.last_name, response.role, response.manager]
+                            db.query(`UPDATE employee WHERE role_id = ?;`, params, (err, result) => {
+                                if (err) {
+                                    throw err
+                                } else {
+                                    console.log("\n Role updated created \n")
+                                }
+                                menu()
+                            })
                         });
                     break;
                 default:
