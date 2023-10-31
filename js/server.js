@@ -72,10 +72,9 @@ const addEmployee = [{
 }]
 
 const updateRole = [{
-    type: 'list',
+    type: 'input',
     message: 'Which employee do you want to update?',
-    choices: ["Angela Martin", "Oscar Martinez", "Kevin Malone", "Dwight Schrute", "Stanley Hudson", "Jim Halpert", "Darryl Philbin", "Roy Anderson"],
-    name: 'employee',
+    name: 'emp_id',
 },
 {
     type: 'input',
@@ -159,12 +158,12 @@ let menu = () => {
                     inquirer
                         .prompt(updateRole)
                         .then((response) => {
-                            const params = [response.first_name, response.last_name, response.role, response.manager]
-                            db.query(`UPDATE employee WHERE role_id = ?;`, params, (err, result) => {
+                            const params = [response.new_update, response.emp_id]
+                            db.query(`UPDATE employee SET role_id = ? WHERE emp_id = ?;`, params, (err, result) => {
                                 if (err) {
                                     throw err
                                 } else {
-                                    console.log("\n Role updated created \n")
+                                    console.log("\n Role updated\n")
                                 }
                                 menu()
                             })
