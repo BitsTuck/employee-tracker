@@ -61,13 +61,14 @@ const addEmployee = [{
 },
 {
     type: 'input',
-    message: 'Employee role:',
-    name: 'role',
+    message: 'Role ID:',
+    name: 'role_id',
 },
 {
     type: 'input',
-    message: 'Manager name:',
+    message: 'Manager:',
     name: 'manager',
+
 }]
 
 const updateRole = [{
@@ -104,7 +105,7 @@ let menu = () => {
                     });
                     break;
                 case 'View all employees':
-                    db.query('SELECT emp_id, first_name, last_name, title, dept_name, salary, manager_name FROM employee INNER JOIN role ON employee.role_id=role.id;', function (err, results) {
+                    db.query('SELECT emp_id, first_name, last_name, title, dept_name, salary, manager FROM employee INNER JOIN role ON employee.role_id=role.id;', function (err, results) {
                         console.table(results);
                         menu()
                     });
@@ -143,8 +144,8 @@ let menu = () => {
                     inquirer
                         .prompt(addEmployee)
                         .then((response) => {
-                            const params = [response.first_name, response.last_name, response.role, response.manager]
-                            db.query(`INSERT INTO employee (first_name, last_name, role_id, manager_name) VALUES (?, ?, ?, ?);`, params, (err, result) => {
+                            const params = [response.first_name, response.last_name, response.role_id, response.manager]
+                            db.query(`INSERT INTO employee (first_name, last_name, role_id, manager) VALUES (?, ?, ?, ?);`, params, (err, result) => {
                                 if (err) {
                                     throw err
                                 } else {
